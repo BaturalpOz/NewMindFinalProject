@@ -1,0 +1,5 @@
+{
+    "dataset_path":"Data/imdb/IMDB_Dataset.csv",
+    "review_column":"review",
+    "rating_column":"sentiment"
+}
