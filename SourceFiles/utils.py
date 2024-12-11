@@ -1,18 +1,17 @@
 import json
 
-def load_config(config_path = "config.json"):
-    return load_json(config_path)
 
 def load_json(path) -> json:
     with open(path) as f:
         file  = json.load(f)
     return file
 def save_to_json(path,dict):
-    file = load_json(path)
-    file[config["dataset_path"]] = dict
     with open(path, "w") as outfile: 
-        json.dump(file, outfile)
-config = load_config()
+        json.dump(dict, outfile)
+config = load_json("config.json")
+def load_config():
+    return config
+
     
 def prepare_prompt(df,size = None, query =  None, extra_text = ""):
     config = load_config()

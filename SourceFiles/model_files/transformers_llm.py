@@ -6,7 +6,7 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 import pandas as pd
 
-config = load_config("config.json")
+config = load_config()
 class transformers_llm(base_model): #This will be invoked for all model names starting with transformers:
     def __init__(self,model_name):
         load_dotenv()

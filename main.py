@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from SourceFiles.preprocessing import get_dataset
 from SourceFiles.sentiment_analysis import bert_sentiment
-from SourceFiles.utils import prepare_prompt, load_config, prepare_prompt_from_list
+from SourceFiles.utils import prepare_prompt, load_config, prepare_prompt_from_list,save_to_json
 from SourceFiles.database_handler import file_handler
 
 
@@ -17,7 +17,16 @@ class ModelResponse (BaseModel):
     token_usage:int
 class NewComments (BaseModel):
     comments: List[str]
-
+class ConfigData(BaseModel):
+    dataset_path: str
+    review_column:str
+    rating_column:str
+    def to_dict(self):
+        return {
+            "dataset_path":self.dataset_path,
+            "review_column":self.review_column,
+            "rating_column":self.rating_column
+        }
 _model = transformers_llm("microsoft/Phi-3.5-mini-instruct")
 _sentiment = bert_sentiment()
 _db = file_handler()
@@ -54,7 +63,7 @@ def get_recursive_summary():
     "response_text":response,
     "token_usage": token
         }
-@app.get("/summarize_new_reviews", response_model = ModelResponse)
+@app.post("/summarize_new_reviews", response_model = ModelResponse)
 def get_new_comment_summaries(new_comments: NewComments):
     batch_summaries_list = _db.load_batch_summaries()
     batch_summary= [text["Summary"] for text in batch_summaries_list]
@@ -77,3 +86,8 @@ def get_new_comment_summaries(new_comments: NewComments):
      "response_text":response,
     "token_usage":token
     }
+@app.post("/change_config",response_model = dict)
+def change_config(config_data: ConfigData):
+    config_dict = config_data.to_dict()
+    save_to_json("config.json",config_dict)
+    return config_dict
