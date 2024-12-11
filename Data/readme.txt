@@ -1,0 +1,1 @@
+This is the data folder for the project, the data inside is not pushed to the repo due to it being too big. You can add your own data here. Please adjust your datset_path in config.json accordingly.

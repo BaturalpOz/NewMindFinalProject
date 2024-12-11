@@ -1,4 +1,5 @@
-Data
+data_folder
 .env
 __pycache__
 venv
+.gitignore
